@@ -230,7 +230,7 @@ var glob, globWork;
             console.log(sig1, sig2);
             page.append('<p>This produces ' + sig1.toFixed(2) + '% significant without assuming the standard deviation and ' + sig2.toFixed(2) + '% with assuming it to be 1. (98.55% expected). I am not sure how close I should be getting with these values.</p>');
             page.append('<p>Finally I want to look at the difference of the power analyses of mixed normally distributed data and regular normal distributions assuming the same overall variance.</p>');
-
+            page.append('<h2>Show what a mixed normal distribution simulation looks like 50/50 n(-0.5,1) / n(0.5,1) with a mean difference of 1.</h2>');
             return runSimulationCompare(numOfTrials, simRunnerNorm, {samples: samplesPerTrial, mean: 0.5, stdev: Math.sqrt(1.25)}, {samples: samplesPerTrial, mean: -0.5, stdev: Math.sqrt(1.25)});
         }).then(function (simulation) {
             //Normal with std 1.25
@@ -254,7 +254,7 @@ var glob, globWork;
 
             page.append('<p>This produces ' + sig1.toFixed(2) + '% significant without assuming the variance and ' + sig2.toFixed(2) + '% with assuming it to be 1.25. The expected power is 36.30%.</p>');
             page.append('<p>Now let us look at a the same mixed distribution as above with a mean difference of 1.</p>');
-            page.append('<h2>Show what a mixed normal distribution simulation looks like 50/50 n(-0.5,1) / n(0.5,1) with a mean difference of 1.</h2>');
+            
             return runSimulationCompare(numOfTrials, simRunnerMixedNorm, {samples: samplesPerTrial, uniform: 0.5, mean1: 0.5, stdev1: 1, mean2: 1.5, stdev2: 1}, {samples: samplesPerTrial, uniform: 0.5, mean1: -0.5, stdev1: 1, mean2: 0.5, stdev2: 1}, -1, 1);
         }).then(function (simulation) {
             //Mix 1 50/50
@@ -272,7 +272,7 @@ var glob, globWork;
             console.log(sig1, sig2);
 
             page.append('<p>This produces ' + sig1.toFixed(2) + '% significant without assuming the standard deviation.</p>');
-
+            page.append('<h2>Show what a mixed normal distribution simulation looks like 80/20 n(0,1) / n(5,1) with a mean difference of 1.</h2>');
             return runSimulationCompare(numOfTrials, simRunnerNorm, {samples: samplesPerTrial, mean: 1, stdev: Math.sqrt(5)}, {samples: samplesPerTrial, mean: 2, stdev: Math.sqrt(5)});
         }).then(function (simulation) {
             //Normal variance 5, mean 1
@@ -296,7 +296,7 @@ var glob, globWork;
 
             page.append('<p>This produces ' + sig1.toFixed(2) + '% significant without assuming the variance and ' + sig2.toFixed(2) + '% with assuming it to be 5. The expected power is 15.95%.</p>');
             page.append('<p>Now let us look at a the same mixed distribution as above with a mean difference of 1.</p>');
-            page.append('<h2>Show what a mixed normal distribution simulation looks like 80/20 n(0,1) / n(5,1) with a mean difference of 1.</h2>');
+            
             return runSimulationCompare(numOfTrials, simRunnerMixedNorm, {samples: samplesPerTrial, uniform: 0.8, mean1: 1, stdev1: 1, mean2: 6, stdev2: 1}, {samples: samplesPerTrial, uniform: 0.8, mean1: 0, stdev1: 1, mean2: 5, stdev2: 1}, -1, 1);
         }).then(function (simulation) {
             //Hopefully mixed 80/20 with higher second mean.
