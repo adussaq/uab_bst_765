@@ -5,8 +5,8 @@ var glob, globWork;
     var createPage, page, mean, variance, runSimulation, max, min, bin, round, runSimulationCompare,
             printSimulationResults, createTable, simRunnerNorm, simRunnerMixedNorm;
 
-    simRunnerNorm = amd_ww.startWorkers({filename: '/assignment2/js/math/normal_dist.min.js'});
-    simRunnerMixedNorm = amd_ww.startWorkers({filename: '/assignment2/js/math/mixed_norm.min.js'});
+    simRunnerNorm = amd_ww.startWorkers({filename: './js/math/normal_dist.min.js'});
+    simRunnerMixedNorm = amd_ww.startWorkers({filename: './js/math/mixed_norm.min.js'});
     globWork = simRunnerNorm;
     mean = function (arr) {
         return arr.reduce(function (x, y) {
