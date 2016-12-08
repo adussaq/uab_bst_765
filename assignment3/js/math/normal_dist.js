@@ -99,6 +99,11 @@
      * @param Float stdev
      */
     globalObject.norm.inv = function(prob, mean, stdev) {
+        if (prob <= 1e-10) {
+            prob = 1e-10;
+        } else if (prob >= 1 - 1e-10) {
+            prob = 1 - 1e-10;
+        }
         var errors = [];
 
         // Sanitize the data

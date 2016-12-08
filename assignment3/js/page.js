@@ -222,6 +222,7 @@ var glob, globWork, createPage, globRunner;
                         p_val2: 0.05
                     }).then(function (result) {
                         allData[result.start.drug][result.start.time_point] = result.CI;
+                        console.log(result);
                     });
                 }
             }
@@ -261,6 +262,40 @@ var glob, globWork, createPage, globRunner;
                 chart.draw(fig.google_data, fig.google_options);
                 $('#interval6').append(fig.table);
                 $('#interval6').append('<p>In this figure I think we see why the drug response is what it is. Our non-responders are either getting worse or not improving on ketamine. In contrast our responder group rejects the null towards the end of the experiment with ketamine response out performing both diaudid and morphine at various points.</p>')
+
+
+                page.append('<h3>---Below is a work in progress.---</h3>');
+                page.append('<h4>We can bias correct these confidence intervals</h4>');
+
+
+                //Add in the bias corrected stuff
+
+                // Means
+                fig = createDataForIntervalGraph(allData.map(function (x) {return x.map(function (y) {return y.mean.BiasCorrect;})}) ,timePointList.map(function (x) {return x.replace(/\D+/g, '') * 1}), theseGroups);
+                page.append('<div id="interval4_b" class="text-center col-xs-12"><div id="plot7_b"></div></div>');
+                fig.google_options.vAxis = {viewWindow: {min: -10, max:1}};
+                fig.google_options.title = "Bias corrected comparison of Mean Change in Pain Scores from Time 0. Utilizes a 5000 repitition bootstrap to generate an 80% confidence intervals.";
+                chart = new google.visualization.ComboChart(document.getElementById('plot7_b'));
+                chart.draw(fig.google_data, fig.google_options);
+                $('#interval4_b').append(fig.table);
+
+                //Medians
+                fig = createDataForIntervalGraph(allData.map(function (x) {return x.map(function (y) {return y.Q2.BiasCorrect;})}) ,timePointList.map(function (x) {return x.replace(/\D+/g, '') * 1}), theseGroups);
+                page.append('<div id="interval5_b" class="text-center col-xs-12"><div id="plot8_b"></div></div>');
+                chart = new google.visualization.ComboChart(document.getElementById('plot8_b'));
+                fig.google_options.vAxis = {viewWindow: {min: -10, max:1}};
+                fig.google_options.title = "Bias corrected comparison of Median Change in Pain Scores from Time 0. Utilizes a 5000 repitition bootstrap to generate an 80% confidence intervals.";
+                chart.draw(fig.google_data, fig.google_options);
+                $('#interval5_b').append(fig.table);
+
+                //Q1 and Q3
+                fig = createDataForIntervalGraph(allData.map(function (x) {return x.map(function (y) {return y.Q3.BiasCorrect;})}).concat(allData.map(function (x) {return x.map(function (y) {return y.Q1.BiasCorrect;})})) ,timePointList.map(function (x) {return x.replace(/\D+/g, '') * 1}), theseGroups);
+                page.append('<div id="interval6_b" class="text-center col-xs-12"><div id="plot9_b"></div></div>');
+                chart = new google.visualization.ComboChart(document.getElementById('plot9_b'));
+                fig.google_options.vAxis = {viewWindow: {min: -10, max:1}};
+                fig.google_options.title = "Bias corrected comparison of First and Third Quartile Change in Pain Scores from Time 0. Utilizes a 5000 repitition bootstrap to generate an 80% confidence intervals.";
+                chart.draw(fig.google_data, fig.google_options);
+                $('#interval6_b').append(fig.table);
 
 
                 console.log('All Done!', allData);
@@ -323,7 +358,6 @@ var glob, globWork, createPage, globRunner;
         //Build html table
         htmlTable = $('<table>', {class: 'table table-striped'});
         //Header
-        console.log('table', tableSet, tableSet.length);
         htmlTable.append($('<thead>').append($('<tr>').append($(tableSet.shift().map(function (x) {return '<th>' + x + ' min</th>'}).join('')))));
         tbody = $('<tbody>');
         htmlTable.append(tbody);
@@ -331,7 +365,6 @@ var glob, globWork, createPage, globRunner;
         for (i = 0; i < tableSet.length; i += 1) {
             c1 = '80';
             c2 = '95';
-            console.log('i"s', i);
             if (i > treatments.length - 1) {
                 c1 = '80s';
                 c2 = '95s';
@@ -345,6 +378,7 @@ var glob, globWork, createPage, globRunner;
                 dtest[c1][j] = dtest[c1][j] || [];
                 dtest[c2][j] = dtest[c2][j] || [];
                 v3 = $('<td>');
+                // console.log(tableSet[i][j], array[i][j]);
                 v1 = $('<div>', {text: '(' + tableSet[i][j][0][0].toFixed(2) + "," + tableSet[i][j][0][1].toFixed(2) + ')'});
                 v2 = $('<div>', {text: '(' + tableSet[i][j][1][0].toFixed(2) + "," + tableSet[i][j][1][1].toFixed(2) + ')'});
                 v3.append(v1);
@@ -355,7 +389,6 @@ var glob, globWork, createPage, globRunner;
                     dtest[c2][j].push([tableSet[i][j][1][0] + 15, tableSet[i][j][1][1] + 15, v2]);
                 }(v1, v2));
             }
-            console.log(row, 'appending', i);
             tbody.append(row);
         }
 
@@ -368,15 +401,10 @@ var glob, globWork, createPage, globRunner;
         var i, j;
         for (i = 0; i < arr.length; i += 1) {
             for (j = i + 1; j < arr.length; j += 1) {
-                console.log('cmp', i, j, arr);
                 // If min 1 < max 2 OR max 1 > min 2 then there is overlap
                 if (!(arr[i][0] < arr[j][1] && arr[j][0] < arr[i][1])) {
-                    console.log('found diff!', arr[i], arr[j]);
                     arr[i][2].css('color', 'red');
                     arr[j][2].css('color', 'red');
-                } else {
-                    console.log('no diff...', arr[i], arr[j]);
-                    // console.log('here', i, j, arr);
                 }
             }
         }
