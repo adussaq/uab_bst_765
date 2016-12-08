@@ -90,15 +90,15 @@
                 median: getMedian(t_arr),
                 CI_min: t_arr[Math.round(t_arr.length * p_val / 2)],
                 CI_max: t_arr[Math.round(t_arr.length * (1 - p_val / 2))],
-                BiasCorrect: getBiasCorrected(t_arr, dataStats[stats[i]], p_val)
+                // BiasCorrect: getBiasCorrected(t_arr, dataStats[stats[i]], p_val)
             };
             if (p_val2) {
                 CIs[stats[i]].CI2_min = t_arr[Math.round(t_arr.length * p_val2 / 2) - 1];
                 CIs[stats[i]].CI2_max = t_arr[Math.round(t_arr.length * (1 - p_val2 / 2)) - 1];
-                temp = getBiasCorrected(t_arr, dataStats[stats[i]], p_val2);
-                CIs[stats[i]].BiasCorrect.CI2_min = temp.CI_min;
-                CIs[stats[i]].BiasCorrect.CI2_max = temp.CI_max;
-                CIs[stats[i]].BiasCorrect.adjusted_pvals2 = temp.adjusted_pvals;
+                // temp = getBiasCorrected(t_arr, dataStats[stats[i]], p_val2);
+                // CIs[stats[i]].BiasCorrect.CI2_min = temp.CI_min;
+                // CIs[stats[i]].BiasCorrect.CI2_max = temp.CI_max;
+                // CIs[stats[i]].BiasCorrect.adjusted_pvals2 = temp.adjusted_pvals;
             }
         }
         return CIs;
