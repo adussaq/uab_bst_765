@@ -261,14 +261,13 @@ var glob, globWork, createPage, globRunner;
                 fig.google_options.title = "Comparison of First and Third Quartile Change in Pain Scores from Time 0. Utilizes a 5000 repitition bootstrap to generate an 80% confidence intervals.";
                 chart.draw(fig.google_data, fig.google_options);
                 $('#interval6').append(fig.table);
-                $('#interval6').append('<p>In this figure I think we see why the drug response is what it is. Our non-responders are either getting worse or not improving on ketamine. In contrast our responder group rejects the null towards the end of the experiment with ketamine response out performing both diaudid and morphine at various points.</p>')
-
-
-                page.append('<h3>---Below is a work in progress.---</h3>');
-                page.append('<h4>We can bias correct these confidence intervals</h4>');
-
+                $('#interval6').append('<p>In this figure I think we see why the drug response is what it is. Our non-responders are either getting worse or not improving on ketamine. In contrast our responder group rejects the null towards the end of the experiment with ketamine response out performing both diaudid and morphine at various points.</p>');
 
                 //Add in the bias corrected stuff
+
+                return;
+                page.append('<h3>---Below is a work in progress.---</h3>');
+                page.append('<h4>We can bias correct these confidence intervals</h4>');
 
                 // Means
                 fig = createDataForIntervalGraph(allData.map(function (x) {return x.map(function (y) {return y.mean.BiasCorrect;})}) ,timePointList.map(function (x) {return x.replace(/\D+/g, '') * 1}), theseGroups);
