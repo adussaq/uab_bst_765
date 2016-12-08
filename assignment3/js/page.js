@@ -6,7 +6,7 @@ var glob, globWork, createPage, globRunner;
             printSimulationResults, createTable, simRunnerNorm, simRunnerMixedNorm, bootstrapRunner,
             createDataForIntervalGraph, compareAndColor;
 
-    bootstrapRunner = amd_ww.startWorkers({filename: 'js/math/bootstrap_worker.js'});
+    bootstrapRunner = amd_ww.startWorkers({filename: 'js/math/bootstrap_worker.min.js'});
     globRunner = bootstrapRunner;
 
     mean = function (arr) {
