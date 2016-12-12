@@ -1,7 +1,7 @@
 /*global self*/
 (function () {
     'use strict';
-    var getMedian, numsort, add, getKeyValues, randomDist, findCIs, pull_val, smallRand, getBiasCorrected, globalObject = {};
+    var randomNormal, getMedian, numsort, add, getKeyValues, randomDist, findCIs, pull_val, smallRand, getBiasCorrected, globalObject = {};
 
     self.onmessage = function (event) {
         //variable declarations
@@ -22,14 +22,14 @@
 
         //return result
         self.postMessage({start: event.data.start, CI: findCIs(results, p_val, p_val2, getKeyValues(data.map(function (x) {
-            return x + smallRand();
+            return x + smallRand(data.length);
         })))});
     };
 
     randomDist = function (array) {
         var retArr = [], i;
         for (i = 0; i < array.length; i += 1) {
-            retArr.push(array[Math.floor(Math.random() * array.length)] + smallRand());
+            retArr.push(array[Math.floor(Math.random() * array.length)] + smallRand(array.length));
         }
         return retArr;
     };
@@ -73,8 +73,8 @@
         return sol;
     };
 
-    smallRand = function () {
-        return 0.1 * (Math.random() - 0.5);
+    smallRand = function (len) {
+        return randomNormal(0, 1 / Math.sqrt(len));
     };
 
     findCIs = function (results, p_val, p_val2, dataStats) {
@@ -332,5 +332,44 @@
         // return value back based on user-select normal distribution
         //return [z * stdev + mean, globalObject.norm.dist(z, 0, 1, true), iter]; // (for debugging)
         return z * stdev + mean;
+    };
+
+    var randomNormal, E_0_25, E_1_35;
+
+    E_0_25 = 4 * Math.exp(0.25);
+    E_1_35 = 4 * Math.exp(-1.35);
+
+    randomNormal = function (mean, stdev) {
+        var u1, u2, ans, u1_2, u2_2, repeat;
+
+        //Generates a random normal based on the ratio of two uniforms.
+        // When mean and stdev are not given, they default to n(0,1)
+
+        repeat = true;
+        while (repeat) {
+            u1 = Math.random();
+            u2 = Math.random();
+            u2 = (2 * u2 - 1) * Math.sqrt(2 / Math.E);
+            u1_2 = u1 * u1;
+            u2_2 = u2 * u2;
+            if (u2_2 < u1_2 * (5 - E_0_25 * u1)) {
+                repeat = false;
+                ans = u2 / u1;
+            } else if (u2_2 >= E_1_35 * u1 + 1.4 * u1_2
+                    || u1_2 >= Math.exp(-0.5 * u2_2 / u1_2)) {
+                repeat = true;
+            } else {
+                repeat = false;
+                ans = u2 / u1;
+            }
+        }
+
+        if (typeof stdev === "number") {
+            ans = ans * stdev;
+        }
+        if (typeof mean === "number") {
+            ans = ans + mean;
+        }
+        return ans;
     };
 }());
